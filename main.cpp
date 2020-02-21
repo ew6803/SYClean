@@ -49,13 +49,13 @@ bool presedence(char after, char before) {
   
 }
 //Shunting Yard Algorithim, takes the infix equation and converts to postfix. 
-q* shuntingyard(q* post, char* infix) {
-  bool running = true; 
+q* shuntingyard(q* post, char* infix) { 
   stack* stack1 = NULL;
   for (int i = 0; i < strlen(infix); i++) {
     if (isdigit(infix[i]) == true) {
     char* data = new char[100];
     int init = i;
+    bool run = true;
     data[0] = infix[i];
       if (isdigit(infix[i + 1])) {
 	i = i + 1;
@@ -66,32 +66,44 @@ q* shuntingyard(q* post, char* infix) {
   }
     else if (infix[i] == '+' || infix[i] == '-' || infix[i] == '*' || infix[i] == '/' || infix[i] == '^') {
     if (stack1 == NULL) {
-      char* data = new char[1];
+      char* data = new char[2];
       data[0] = infix[i];
       node* nNode = new node(data);
       stack1 = new stack(nNode); 
       } 
     else { 
-      char* data = new char[1];
+      char* data = new char[2];
       data[0] = infix[i];
       node* nNode = new node(data);
       node* compare = stack1 -> pop();
+      int count = 0; 
       if (compare != NULL) {
 	if (presedence(data[0], compare -> getData()[0]) == true) {
 	  post -> enqueue(compare);
-	  node* qq = stack1 -> pop();
-	  //}
-	if ((presedence(data[0], qq -> getData()[0]) == false) && (data[0] == '^')) {
-	  cout << "test"; 
-	  stack1 -> push(compare);
-	      }
-	else {
+	  count++;
+	  bool run = true;
+
+	  while (run == true) {
+	    count++;
+	    node* qq = stack1 -> pop();
+	    if (qq == NULL) {
+	      run = false; 
+	    }
+	    else if (presedence(data[0], qq -> getData()[0]) == false) {
+	      stack1 -> push(qq);
+	      run = false; 
+	    }
+	    else {
 	      post -> enqueue(qq); 
 	    }
+	    
+	  }
 	}
+      }
+      if (count == 0) {
+        stack1 -> push(compare);
 	}
-      stack1 -> push(compare);
-      stack1 -> push(nNode); 
+      stack1 -> push(nNode);
     }
     }
   else if (infix[i] == '(') {
@@ -114,6 +126,7 @@ q* shuntingyard(q* post, char* infix) {
   }
     
   }
+  bool running = true; 
   while (running == true) {
     node* enq = stack1 -> pop();
   if (enq != NULL) {
@@ -122,7 +135,7 @@ q* shuntingyard(q* post, char* infix) {
   else {
      running = false; 
     }
-  }  
+  }
   return post;
 }
 
