@@ -34,10 +34,10 @@ bool presedence(char after, char before) {
   if ((after == '+' || after == '-') && (before == '*' || before == '/' || before == '^')) {
     return true;
   }
-  else if ((after == '*' || after == '/') && before == '^') {
+  else if ((after == '*' || after == '/') && (before == '^')) {
     return true; 
   }
-  else if ((after == '+' || after == '-') && (before == '+' || before == '-')) {
+  else if ((after == '-' || after == '+') && (before == '-' || before == '-')) {
     return false; 
   }
   else if ((after == '*' || after == '/') && (before == '*' || before == '/')) {
@@ -57,6 +57,10 @@ q* shuntingyard(q* post, char* infix) {
     char* data = new char[100];
     int init = i;
     data[0] = infix[i];
+      if (isdigit(infix[i + 1])) {
+	i = i + 1;
+	data[i - init] = infix[i]; 
+      }
     node* nNode = new node(data);
     post -> enqueue(nNode); 
   }
