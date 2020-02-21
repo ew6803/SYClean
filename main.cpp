@@ -37,11 +37,11 @@ bool presedence(char after, char before) {
   else if ((after == '*' || after == '/') && (before == '^')) {
     return true; 
   }
-  else if ((after == '-' || after == '+') && (before == '-' || before == '-')) {
-    return false; 
+  else if ((after == '-' || after == '+') && (before == '-' || before == '+')) {
+    return true; 
   }
   else if ((after == '*' || after == '/') && (before == '*' || before == '/')) {
-    return false; 
+    return true; 
   }
   else {
     return false;
@@ -79,19 +79,21 @@ q* shuntingyard(q* post, char* infix) {
       if (compare != NULL) {
 	if (presedence(data[0], compare -> getData()[0]) == true) {
 	  post -> enqueue(compare);
-	    node* qq = stack1 -> pop();
-	    if (presedence(data[0], qq -> getData()[0]) == false) {
-	      stack1 -> push(qq);
-	    }
-	    else {
+	  node* qq = stack1 -> pop();
+	  //}
+	if ((presedence(data[0], qq -> getData()[0]) == false) && (data[0] == '^')) {
+	  cout << "test"; 
+	  stack1 -> push(compare);
+	      }
+	else {
 	      post -> enqueue(qq); 
 	    }
 	}
-      }
+	}
       stack1 -> push(compare);
       stack1 -> push(nNode); 
     }
-  }
+    }
   else if (infix[i] == '(') {
     char* para = new char[1];
     para[0] = '(';
